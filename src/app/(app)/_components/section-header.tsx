@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { fadeIn } from "../page";
+import { fadeIn } from "../animation-variants";
+
 
 export const SectionHeader = ({ title, subtitle }:{title:string,subtitle:string}) => {
     return (

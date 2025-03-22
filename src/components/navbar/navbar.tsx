@@ -136,6 +136,7 @@ function Navbar({}: Props) {
       <nav className="hidden md:flex space-x-6">
         {['hero', 'about', 'projects', 'experience', 'contact'].map((section) => (
         <NavItem 
+        key={section}
         section={section}
         setActiveSection={setActiveSection}
         activeSection={activeSection}/>

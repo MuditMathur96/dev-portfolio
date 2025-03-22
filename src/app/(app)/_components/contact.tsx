@@ -2,13 +2,13 @@
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import React, { FormEvent, useState } from 'react'
-import { fadeIn } from '../page'
 import { Github, Linkedin, Loader, Mail } from 'lucide-react'
 import useIsMounted from '@/app/hooks/useIsMounted'
 import { SectionHeader } from './section-header'
 import { sendContactEmail } from '@/lib/email-service'
 import Configs from '@/config'
 import { toast } from 'sonner'
+import { fadeIn } from '../animation-variants'
 
 type Props = {}
 

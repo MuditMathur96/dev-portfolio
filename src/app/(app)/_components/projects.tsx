@@ -2,11 +2,11 @@
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import React from 'react'
-import { fadeIn, scaleUp, staggerContainer } from '../page'
 import { ExternalLink, Github } from 'lucide-react'
 import useIsMounted from '@/app/hooks/useIsMounted'
 import { SectionHeader } from './section-header'
 import { ProjectType } from '@/types'
+import { fadeIn, scaleUp, staggerContainer } from '../animation-variants'
 
 
 type Props = {

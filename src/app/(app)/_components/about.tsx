@@ -1,13 +1,14 @@
 "use client"
 import { motion } from 'framer-motion'
 import React from 'react'
-import { fadeIn, scaleUp, skillBarVariant } from '../page'
+
 import RotatingLanguages from '@/components/language-circle'
 import { Button } from '@/components/ui/button'
 import useIsMounted from '@/app/hooks/useIsMounted'
 import { SectionHeader } from './section-header'
 import { SkillType } from '@/types'
 import Link from 'next/link'
+import { fadeIn, scaleUp, skillBarVariant } from '../animation-variants'
 
 // Component for statistics
 const Stat = ({ number, text }:{number:number | string,text:string}) => {

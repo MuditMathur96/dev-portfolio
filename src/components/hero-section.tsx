@@ -101,7 +101,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             variants={itemVariants}
             className="inline-block font-mono text-sm px-4 py-2 rounded-md bg-gray-800 text-green-400 mb-6 border border-gray-700 shadow-xl"
           >
-            <span className="text-purple-400">~</span> <span className="text-blue-400">$</span> <span className="typing-animation">welcome --name="{name}" --status="online"</span>
+            <span className="text-purple-400">~</span> <span className="text-blue-400">$</span> <span className="typing-animation">welcome --name=&quot;{name}&quot; --status=&quot;online&quot;</span>
           </motion.div>
 
           {/* Name and title */}
