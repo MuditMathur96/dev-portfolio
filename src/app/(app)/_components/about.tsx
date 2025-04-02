@@ -57,7 +57,7 @@ const About = ({skills,resume}:{skills:SkillType[],resume:{link:string} | null})
                   variants={fadeIn}
                 >
                   <h3 className="text-2xl font-semibold mb-4">
-                    A passionate Full-Stack Developer based in New York
+                    A passionate Full-Stack Developer based in India
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-6 text-left text-clip  ">
                     With 4+ years of experience in web development,I specialize in creating
