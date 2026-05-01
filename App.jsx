@@ -1,11 +1,10 @@
-"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { store, setActiveSection, setProjectFilter, toggleMobileMenu, closeMobileMenu, setActiveSkillCategory } from "@/store/store";
-import { PORTFOLIO_DATA } from "@/data/portfolioData";
+import { store, setActiveSection, setProjectFilter, toggleMobileMenu, closeMobileMenu, setActiveSkillCategory } from "./store/store";
+import { PORTFOLIO_DATA } from "./data/portfolioData";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
-const cn = (...classes:any[]) => classes.filter(Boolean).join(" ");
+const cn = (...classes) => classes.filter(Boolean).join(" ");
 
 // ─── Icons (inline SVG) ───────────────────────────────────────────────────────
 const Icon = {
@@ -62,14 +61,14 @@ const Icon = {
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 function Navbar() {
   const dispatch = useDispatch();
-  const { mobileMenuOpen } = useSelector((s:any) => s.ui);
+  const { mobileMenuOpen } = useSelector((s) => s.ui);
   const [scrolled, setScrolled] = useState(false);
   const { personal } = PORTFOLIO_DATA;
 
   const navLinks = [
     { id: "about", label: "About" },
     { id: "skills", label: "Skills" },
-    // { id: "projects", label: "Projects" },
+    { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
     { id: "contact", label: "Contact" },
   ];
@@ -80,7 +79,7 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollTo = (id:string) => {
+  const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     dispatch(closeMobileMenu());
   };
@@ -284,7 +283,7 @@ function AboutSection() {
 // ─── Skills Section ───────────────────────────────────────────────────────────
 function SkillsSection() {
   const dispatch = useDispatch();
-  const { activeSkillCategory } = useSelector((s:any) => s.ui);
+  const { activeSkillCategory } = useSelector((s) => s.ui);
   const { skills } = PORTFOLIO_DATA;
   const categories = Object.keys(skills);
 
@@ -311,7 +310,7 @@ function SkillsSection() {
         </div>
 
         <div className="grid gap-4">
-          {(skills as any)[activeSkillCategory].map((skill:any) => (
+          {skills[activeSkillCategory].map((skill) => (
             <div key={skill.name} className="group">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-gray-300 font-medium">{skill.name}</span>
@@ -332,47 +331,47 @@ function SkillsSection() {
 }
 
 // ─── Projects Section ─────────────────────────────────────────────────────────
-// function ProjectsSection() {
-//   const dispatch = useDispatch();
-//   const { activeProjectFilter } = useSelector((s) => s.ui);
-//   const { projects } = PORTFOLIO_DATA;
-//   const filters = ["All", "AI", "Web"];
+function ProjectsSection() {
+  const dispatch = useDispatch();
+  const { activeProjectFilter } = useSelector((s) => s.ui);
+  const { projects } = PORTFOLIO_DATA;
+  const filters = ["All", "AI", "Web"];
 
-//   const filtered = activeProjectFilter === "All"
-//     ? projects
-//     : projects.filter((p) => p.category === activeProjectFilter);
+  const filtered = activeProjectFilter === "All"
+    ? projects
+    : projects.filter((p) => p.category === activeProjectFilter);
 
-//   return (
-//     <section id="projects" className="py-28 max-w-6xl mx-auto px-6">
-//       <SectionHeader label="Projects" title="Things I've Built" />
+  return (
+    <section id="projects" className="py-28 max-w-6xl mx-auto px-6">
+      <SectionHeader label="Projects" title="Things I've Built" />
 
-//       <div className="flex gap-2 mt-12 mb-10">
-//         {filters.map((f) => (
-//           <button
-//             key={f}
-//             onClick={() => dispatch(setProjectFilter(f))}
-//             className={cn(
-//               "px-4 py-2 rounded-lg text-sm font-mono transition-all",
-//               activeProjectFilter === f
-//                 ? "bg-cyan-500 text-white"
-//                 : "bg-gray-900 text-gray-400 border border-gray-800 hover:border-cyan-800 hover:text-cyan-400"
-//             )}
-//           >
-//             {f}
-//           </button>
-//         ))}
-//       </div>
+      <div className="flex gap-2 mt-12 mb-10">
+        {filters.map((f) => (
+          <button
+            key={f}
+            onClick={() => dispatch(setProjectFilter(f))}
+            className={cn(
+              "px-4 py-2 rounded-lg text-sm font-mono transition-all",
+              activeProjectFilter === f
+                ? "bg-cyan-500 text-white"
+                : "bg-gray-900 text-gray-400 border border-gray-800 hover:border-cyan-800 hover:text-cyan-400"
+            )}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
 
-//       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-//         {filtered.map((project) => (
-//           <ProjectCard key={project.title} project={project} />
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {filtered.map((project) => (
+          <ProjectCard key={project.title} project={project} />
+        ))}
+      </div>
+    </section>
+  );
+}
 
-function ProjectCard({ project }:any) {
+function ProjectCard({ project }) {
   const isAI = project.category === "AI";
   return (
     <div className={cn(
@@ -407,7 +406,7 @@ function ProjectCard({ project }:any) {
       <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">{project.description}</p>
 
       <div className="flex flex-wrap gap-1.5 mb-5">
-        {project.tags.map((tag:string) => (
+        {project.tags.map((tag) => (
           <span key={tag} className="text-xs px-2 py-1 bg-gray-800/70 text-gray-400 rounded-md font-mono">
             {tag}
           </span>
@@ -485,13 +484,13 @@ function ContactSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(6,182,212,0.08),transparent_60%)]" />
 
         <div className="relative">
-          <span className="text-xs font-mono text-cyan-500 uppercase tracking-widest">{`Let's Build Together`}</span>
+          <span className="text-xs font-mono text-cyan-500 uppercase tracking-widest">Let's Build Together</span>
           <h2 className="text-4xl md:text-5xl font-black text-white mt-4 mb-6">
             Have an AI project in mind?
           </h2>
           <p className="text-gray-400 max-w-lg mx-auto mb-10 leading-relaxed">
-            {`Whether you're looking to integrate LLMs into your product, build agentic workflows,
-            or develop intelligent applications — let's talk.`}
+            Whether you're looking to integrate LLMs into your product, build agentic workflows,
+            or develop intelligent applications — let's talk.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -530,7 +529,7 @@ function Footer() {
 }
 
 // ─── Shared: Section Header ───────────────────────────────────────────────────
-function SectionHeader({ label, title }:{label:string,title:string}) {
+function SectionHeader({ label, title }) {
   return (
     <div>
       <span className="text-xs font-mono text-cyan-500 uppercase tracking-widest">{label}</span>
@@ -547,7 +546,7 @@ function AppContent() {
       <HeroSection />
       <AboutSection />
       <SkillsSection />
-      {/* <ProjectsSection /> */}
+      <ProjectsSection />
       <ExperienceSection />
       <ContactSection />
       <Footer />

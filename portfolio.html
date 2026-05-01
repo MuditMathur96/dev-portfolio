@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Developer Portfolio</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/5.0.1/redux.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/9.1.0/react-redux.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Syne', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background: #030712; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #030712; }
+  ::-webkit-scrollbar-thumb { background: #164e63; border-radius: 2px; }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-fade-up { animation: fade-up 0.6s ease-out forwards; }
+  .grid-bg {
+    background-image: linear-gradient(to right, rgba(6,182,212,0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(6,182,212,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+// ─── PORTFOLIO DATA ─────────────────────────────────────────────────────────────
+const PORTFOLIO_DATA = {
+  personal: {
+    name: "Your Name",
+    title: "Full Stack → GenAI Developer",
+    tagline: "Building intelligent systems at the intersection of web and AI",
+    email: "you@example.com",
+    github: "https://github.com/yourusername",
+    linkedin: "https://linkedin.com/in/yourusername",
+    location: "India",
+    availableForWork: true,
+  },
+  about: `Full stack developer with 5+ years of experience architecting modern web applications, now specializing in Generative AI and Agentic systems. I've consulted for multiple clients delivering AI-powered solutions across industries, and am currently pursuing a PG Certificate in GenAI, Agentic AI & ML Applications for Engineers — actively migrating my role from Full Stack to GenAI development.`,
+  skills: {
+    "AI & GenAI": [
+      { name: "LLMs & Prompt Engineering", level: 85 },
+      { name: "Agentic AI Systems", level: 80 },
+      { name: "RAG Pipelines", level: 78 },
+      { name: "LangChain / LlamaIndex", level: 75 },
+      { name: "ML Applications", level: 70 },
+    ],
+    "Frontend": [
+      { name: "React & Next.js", level: 95 },
+      { name: "TypeScript", level: 90 },
+      { name: "Redux / Zustand", level: 90 },
+      { name: "Tailwind CSS", level: 88 },
+      { name: "Node.js", level: 82 },
+    ],
+    "Backend": [
+      { name: ".NET / C#", level: 88 },
+      { name: "Python", level: 85 },
+      { name: "FastAPI / Django", level: 80 },
+      { name: "REST & GraphQL APIs", level: 90 },
+      { name: "Docker", level: 85 },
+    ],
+    "Cloud & Infra": [
+      { name: "Google Cloud Platform", level: 82 },
+      { name: "Microsoft Azure", level: 80 },
+      { name: "CI/CD Pipelines", level: 78 },
+      { name: "Kubernetes", level: 70 },
+    ],
+  },
+  experience: [
+    {
+      role: "AI Consultant",
+      company: "Multiple Clients",
+      period: "2023 – Present",
+      type: "consulting",
+      highlights: [
+        "Designed and delivered AI-powered features for enterprise clients across verticals",
+        "Built RAG-based document intelligence pipelines processing 100K+ documents",
+        "Advised on LLM integration strategies, model selection, and agentic architectures",
+        "Reduced manual processing time by 60% with autonomous agentic workflows",
+      ],
+    },
+    {
+      role: "Senior Full Stack Developer",
+      company: "Previous Employer",
+      period: "2020 – 2023",
+      type: "fulltime",
+      highlights: [
+        "Led development of React + .NET microservices platform serving 50K+ users",
+        "Deployed and managed containerized applications on GCP and Azure",
+        "Mentored junior developers, defined coding standards, and led code reviews",
+        "Optimized API performance reducing response times by 40%",
+      ],
+    },
+    {
+      role: "Full Stack Developer",
+      company: "Earlier Company",
+      period: "2019 – 2020",
+      type: "fulltime",
+      highlights: [
+        "Built scalable web applications using React and TypeScript",
+        "Integrated third-party APIs, payment gateways, and external services",
+        "Contributed to Docker-based CI/CD deployment pipelines",
+      ],
+    },
+  ],
+  projects: [
+    {
+      title: "Agentic Research Assistant",
+      description: "Multi-agent system that autonomously searches, synthesizes, and summarizes research papers using LangChain and GPT-4.",
+      tags: ["LangChain", "Python", "FastAPI", "React", "OpenAI"],
+      category: "AI",
+      status: "live",
+    },
+    {
+      title: "RAG Document Intelligence",
+      description: "Enterprise RAG pipeline enabling semantic search over 100K+ internal documents with context-aware, grounded responses.",
+      tags: ["RAG", "LlamaIndex", "Azure", "Python", "Vector DB"],
+      category: "AI",
+      status: "live",
+    },
+    {
+      title: "Real-time Collaboration Platform",
+      description: "Full-stack collaborative workspace with live editing, presence indicators, and full version history.",
+      tags: ["React", "TypeScript", "SignalR", ".NET", "Docker"],
+      category: "Web",
+      status: "live",
+    },
+    {
+      title: "AI Code Review Bot",
+      description: "GitHub bot performing automated code reviews, security scans, and AI-driven improvement suggestions.",
+      tags: ["Python", "LLMs", "GitHub API", "FastAPI", "GCP"],
+      category: "AI",
+      status: "building",
+    },
+    {
+      title: "Cloud Cost Optimizer",
+      description: "Dashboard analyzing GCP & Azure usage patterns with AI-driven recommendations to reduce cloud spend.",
+      tags: ["React", "Redux", "Python", "GCP", "Azure"],
+      category: "Web",
+      status: "live",
+    },
+    {
+      title: "Prompt Playground",
+      description: "Interactive tool for testing, comparing, and versioning prompts across multiple LLM providers side by side.",
+      tags: ["React", "TypeScript", "Zustand", "OpenAI", "Anthropic"],
+      category: "AI",
+      status: "building",
+    },
+  ],
+  education: [
+    {
+      degree: "PG Certificate – GenAI, Agentic AI & ML Applications for Engineers",
+      institution: "Pursuing Currently",
+      period: "2024 – Present",
+      highlight: true,
+    },
+    {
+      degree: "Bachelor of Engineering – Computer Science",
+      institution: "University Name",
+      period: "2015 – 2019",
+      highlight: false,
+    },
+  ],
+  certifications: [
+    { name: "Google Cloud Professional Developer", issuer: "Google", year: 2023 },
+    { name: "Microsoft Azure Developer Associate", issuer: "Microsoft", year: 2022 },
+  ],
+  stats: [
+    { label: "Years Experience", value: "5+" },
+    { label: "Projects Shipped", value: "30+" },
+    { label: "AI Clients", value: "8+" },
+    { label: "Technologies", value: "20+" },
+  ],
+};
+
+// ─── REDUX STORE ──────────────────────────────────────────────────────────────
+const { createStore } = Redux;
+const { Provider, useDispatch, useSelector } = ReactRedux;
+
+const initialState = {
+  activeSection: "home",
+  activeProjectFilter: "All",
+  mobileMenuOpen: false,
+  activeSkillCategory: "AI & GenAI",
+};
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case "SET_SECTION": return { ...state, activeSection: action.payload };
+    case "SET_PROJECT_FILTER": return { ...state, activeProjectFilter: action.payload };
+    case "TOGGLE_MOBILE_MENU": return { ...state, mobileMenuOpen: !state.mobileMenuOpen };
+    case "CLOSE_MOBILE_MENU": return { ...state, mobileMenuOpen: false };
+    case "SET_SKILL_CATEGORY": return { ...state, activeSkillCategory: action.payload };
+    default: return state;
+  }
+}
+
+const store = createStore(reducer);
+const actions = {
+  setSection: (p) => ({ type: "SET_SECTION", payload: p }),
+  setFilter: (p) => ({ type: "SET_PROJECT_FILTER", payload: p }),
+  toggleMenu: () => ({ type: "TOGGLE_MOBILE_MENU" }),
+  closeMenu: () => ({ type: "CLOSE_MOBILE_MENU" }),
+  setSkillCat: (p) => ({ type: "SET_SKILL_CATEGORY", payload: p }),
+};
+
+// ─── ICONS ────────────────────────────────────────────────────────────────────
+const { useState, useEffect, useRef } = React;
+
+const IconBrain = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:"18px",height:"18px"}}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+  </svg>
+);
+const IconGithub = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" style={{width:"18px",height:"18px"}}>
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+  </svg>
+);
+const IconLinkedin = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" style={{width:"18px",height:"18px"}}>
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+  </svg>
+);
+const IconMail = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:"18px",height:"18px"}}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+  </svg>
+);
+const IconMenu = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:"22px",height:"22px"}}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+  </svg>
+);
+const IconX = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:"22px",height:"22px"}}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+const IconCode = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:"18px",height:"18px"}}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+  </svg>
+);
+const IconLink = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{width:"14px",height:"14px"}}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+  </svg>
+);
+
+// ─── HELPER ───────────────────────────────────────────────────────────────────
+function cn(...classes) { return classes.filter(Boolean).join(" "); }
+
+function SectionHeader({ label, title }) {
+  return (
+    <div>
+      <div style={{
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: "11px",
+        letterSpacing: "0.2em",
+        color: "#22d3ee",
+        textTransform: "uppercase",
+        marginBottom: "12px",
+      }}>{label}</div>
+      <h2 style={{
+        fontFamily: "'Syne', sans-serif",
+        fontSize: "clamp(28px, 5vw, 42px)",
+        fontWeight: 800,
+        color: "#fff",
+        margin: 0,
+      }}>{title}</h2>
+    </div>
+  );
+}
+
+// ─── NAVBAR ───────────────────────────────────────────────────────────────────
+function Navbar() {
+  const dispatch = useDispatch();
+  const { mobileMenuOpen } = useSelector(s => s);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    dispatch(actions.closeMenu());
+  };
+
+  const navLinks = [
+    { id: "about", label: "About" },
+    { id: "skills", label: "Skills" },
+    { id: "projects", label: "Projects" },
+    { id: "experience", label: "Experience" },
+    { id: "contact", label: "Contact" },
+  ];
+
+  return (
+    <nav style={{
+      position: "fixed", top: 0, width: "100%", zIndex: 100,
+      background: scrolled ? "rgba(3,7,18,0.92)" : "transparent",
+      backdropFilter: scrolled ? "blur(16px)" : "none",
+      borderBottom: scrolled ? "1px solid rgba(6,182,212,0.12)" : "none",
+      transition: "all 0.3s ease",
+    }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? "60px" : "72px", transition: "height 0.3s ease" }}>
+        
+        <button onClick={() => scrollTo("home")} style={{ display: "flex", alignItems: "center", gap: "10px", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+          <div style={{ width: "34px", height: "34px", borderRadius: "10px", background: "linear-gradient(135deg, #22d3ee, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}>
+            <IconBrain />
+          </div>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "13px", fontWeight: 600, color: "white", letterSpacing: "0.05em" }}>
+            {PORTFOLIO_DATA.personal.name.split(" ")[0]}<span style={{ color: "#22d3ee" }}>.</span>dev
+          </span>
+        </button>
+
+        {/* Desktop */}
+        <div className="hidden md:flex" style={{ alignItems: "center", gap: "4px" }}>
+          {navLinks.map(link => (
+            <button key={link.id} onClick={() => scrollTo(link.id)} style={{
+              padding: "8px 16px", background: "none", border: "none", cursor: "pointer",
+              color: "#9ca3af", fontSize: "13px", fontFamily: "'JetBrains Mono', monospace",
+              borderRadius: "8px", transition: "all 0.2s",
+            }}
+            onMouseEnter={e => { e.target.style.color = "#22d3ee"; e.target.style.background = "rgba(6,182,212,0.08)"; }}
+            onMouseLeave={e => { e.target.style.color = "#9ca3af"; e.target.style.background = "none"; }}>
+              {link.label}
+            </button>
+          ))}
+          <a href={`mailto:${PORTFOLIO_DATA.personal.email}`} style={{
+            marginLeft: "12px", padding: "8px 20px",
+            background: "rgba(34,211,238,0.08)",
+            border: "1px solid rgba(34,211,238,0.3)",
+            color: "#22d3ee", fontSize: "12px",
+            fontFamily: "'JetBrains Mono', monospace",
+            borderRadius: "10px", textDecoration: "none",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={e => e.target.style.background = "rgba(34,211,238,0.16)"}
+          onMouseLeave={e => e.target.style.background = "rgba(34,211,238,0.08)"}>
+            Hire Me →
+          </a>
+        </div>
+
+        {/* Mobile toggle */}
+        <button className="md:hidden" onClick={() => dispatch(actions.toggleMenu())} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af" }}>
+          {mobileMenuOpen ? <IconX /> : <IconMenu />}
+        </button>
+      </div>
+
+      {mobileMenuOpen && (
+        <div style={{ background: "rgba(3,7,18,0.97)", backdropFilter: "blur(16px)", borderTop: "1px solid rgba(6,182,212,0.12)", padding: "12px 24px 20px" }}>
+          {navLinks.map(link => (
+            <button key={link.id} onClick={() => scrollTo(link.id)} style={{
+              display: "block", width: "100%", textAlign: "left",
+              padding: "12px 16px", background: "none", border: "none", cursor: "pointer",
+              color: "#d1d5db", fontSize: "13px", fontFamily: "'JetBrains Mono', monospace",
+              borderRadius: "8px",
+            }}>
+              {link.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+}
+
+// ─── HERO ─────────────────────────────────────────────────────────────────────
+function HeroSection() {
+  const { personal, stats } = PORTFOLIO_DATA;
+
+  return (
+    <section id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", paddingTop: "80px" }}>
+      {/* Grid background */}
+      <div className="grid-bg" style={{ position: "absolute", inset: 0, maskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, black 60%, transparent 100%)" }} />
+      
+      {/* Glow blobs */}
+      <div style={{ position: "absolute", top: "20%", left: "20%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "20%", right: "15%", width: "350px", height: "350px", background: "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+
+      <div style={{ position: "relative", maxWidth: "900px", margin: "0 auto", padding: "0 24px", textAlign: "center" }}>
+        {/* Status pill */}
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: "8px",
+          padding: "7px 18px",
+          background: "rgba(8,47,73,0.6)",
+          border: "1px solid rgba(6,182,212,0.25)",
+          borderRadius: "999px", marginBottom: "40px",
+        }}>
+          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#4ade80" }} className="animate-pulse-dot" />
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", color: "#67e8f9", letterSpacing: "0.15em" }}>
+            AVAILABLE FOR AI PROJECTS
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(48px, 8vw, 80px)", lineHeight: 1.05, color: "white", margin: "0 0 24px" }}>
+          <span style={{ display: "block" }}>Full Stack</span>
+          <span style={{ display: "block", background: "linear-gradient(90deg, #22d3ee, #60a5fa, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            → GenAI Dev
+          </span>
+        </h1>
+
+        <p style={{ color: "#9ca3af", fontSize: "clamp(16px, 2.5vw, 20px)", maxWidth: "600px", margin: "0 auto 20px", lineHeight: 1.7, fontWeight: 300 }}>
+          {personal.tagline}
+        </p>
+
+        {/* GenAI pursuit badge */}
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: "8px",
+          padding: "8px 18px",
+          background: "rgba(46,16,101,0.3)",
+          border: "1px solid rgba(139,92,246,0.25)",
+          borderRadius: "10px", marginBottom: "48px",
+          color: "#c4b5fd", fontSize: "12px",
+          fontFamily: "'JetBrains Mono', monospace",
+        }}>
+          <IconBrain />
+          Currently: PG Certificate in GenAI & Agentic AI
+        </div>
+
+        {/* CTAs */}
+        <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "72px" }}>
+          <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} style={{
+            padding: "14px 32px",
+            background: "linear-gradient(135deg, #22d3ee, #3b82f6)",
+            color: "white", fontWeight: 600, borderRadius: "12px",
+            border: "none", cursor: "pointer", fontSize: "14px",
+            fontFamily: "'Syne', sans-serif",
+            boxShadow: "0 8px 32px rgba(34,211,238,0.2)",
+            transition: "opacity 0.2s",
+          }}
+          onMouseEnter={e => e.target.style.opacity = "0.88"}
+          onMouseLeave={e => e.target.style.opacity = "1"}>
+            View Projects
+          </button>
+          <a href={`mailto:${personal.email}`} style={{
+            padding: "14px 32px",
+            background: "transparent",
+            color: "#d1d5db", fontWeight: 600, borderRadius: "12px",
+            border: "1px solid rgba(255,255,255,0.12)", fontSize: "14px",
+            fontFamily: "'Syne', sans-serif", textDecoration: "none",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={e => { e.target.style.borderColor = "rgba(34,211,238,0.4)"; e.target.style.color = "#22d3ee"; }}
+          onMouseLeave={e => { e.target.style.borderColor = "rgba(255,255,255,0.12)"; e.target.style.color = "#d1d5db"; }}>
+            Get In Touch
+          </a>
+        </div>
+
+        {/* Stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", maxWidth: "560px", margin: "0 auto" }}>
+          {stats.map(stat => (
+            <div key={stat.label} style={{
+              background: "rgba(17,24,39,0.6)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "14px", padding: "18px 12px",
+              backdropFilter: "blur(8px)",
+            }}>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "22px", fontWeight: 700, color: "#22d3ee" }}>{stat.value}</div>
+              <div style={{ fontSize: "10px", color: "#6b7280", marginTop: "6px", fontWeight: 500 }}>{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── ABOUT ────────────────────────────────────────────────────────────────────
+function AboutSection() {
+  const { personal, about, education, certifications } = PORTFOLIO_DATA;
+
+  return (
+    <section id="about" style={{ padding: "112px 24px", maxWidth: "1100px", margin: "0 auto" }}>
+      <SectionHeader label="About" title="The Developer Behind the Code" />
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", marginTop: "64px", alignItems: "start" }} className="about-grid">
+        <div>
+          <p style={{ color: "#d1d5db", lineHeight: 1.85, fontSize: "17px", fontWeight: 300, marginBottom: "32px" }}>{about}</p>
+          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            {[
+              { href: personal.github, icon: <IconGithub />, label: "GitHub" },
+              { href: personal.linkedin, icon: <IconLinkedin />, label: "LinkedIn" },
+              { href: `mailto:${personal.email}`, icon: <IconMail />, label: "Email" },
+            ].map(link => (
+              <a key={link.label} href={link.href} style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                color: "#6b7280", fontSize: "13px",
+                fontFamily: "'JetBrains Mono', monospace",
+                textDecoration: "none", transition: "color 0.2s",
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = "#22d3ee"}
+              onMouseLeave={e => e.currentTarget.style.color = "#6b7280"}>
+                {link.icon}<span>{link.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", color: "#6b7280", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "20px" }}>
+            Education & Certifications
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+            {education.map(ed => (
+              <div key={ed.degree} style={{
+                padding: "18px 20px",
+                background: ed.highlight ? "linear-gradient(135deg, rgba(46,16,101,0.3), rgba(8,47,73,0.3))" : "rgba(17,24,39,0.4)",
+                border: ed.highlight ? "1px solid rgba(139,92,246,0.3)" : "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "14px",
+              }}>
+                {ed.highlight && (
+                  <div style={{
+                    display: "inline-block", fontSize: "10px", fontFamily: "'JetBrains Mono', monospace",
+                    color: "#a78bfa", background: "rgba(46,16,101,0.5)",
+                    padding: "3px 10px", borderRadius: "999px", marginBottom: "8px",
+                  }}>In Progress</div>
+                )}
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "white", lineHeight: 1.4 }}>{ed.degree}</div>
+                <div style={{ fontSize: "11px", color: "#6b7280", marginTop: "6px" }}>{ed.institution} · {ed.period}</div>
+              </div>
+            ))}
+
+            {certifications.map(cert => (
+              <div key={cert.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                <div>
+                  <div style={{ fontSize: "13px", color: "#d1d5db" }}>{cert.name}</div>
+                  <div style={{ fontSize: "11px", color: "#6b7280" }}>{cert.issuer}</div>
+                </div>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "#6b7280" }}>{cert.year}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── SKILLS ───────────────────────────────────────────────────────────────────
+function SkillsSection() {
+  const dispatch = useDispatch();
+  const { activeSkillCategory } = useSelector(s => s);
+  const { skills } = PORTFOLIO_DATA;
+  const categories = Object.keys(skills);
+
+  return (
+    <section id="skills" style={{ padding: "112px 24px", background: "rgba(17,24,39,0.3)" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <SectionHeader label="Skills" title="Technical Arsenal" />
+
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "48px", marginBottom: "40px" }}>
+          {categories.map(cat => (
+            <button key={cat} onClick={() => dispatch(actions.setSkillCat(cat))} style={{
+              padding: "9px 20px", borderRadius: "10px", cursor: "pointer",
+              fontFamily: "'JetBrains Mono', monospace", fontSize: "12px",
+              border: "1px solid",
+              background: activeSkillCategory === cat ? "#22d3ee" : "rgba(17,24,39,0.8)",
+              borderColor: activeSkillCategory === cat ? "#22d3ee" : "rgba(255,255,255,0.08)",
+              color: activeSkillCategory === cat ? "#030712" : "#9ca3af",
+              fontWeight: activeSkillCategory === cat ? 600 : 400,
+              transition: "all 0.2s",
+            }}>
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gap: "20px", maxWidth: "700px" }}>
+          {skills[activeSkillCategory].map(skill => (
+            <div key={skill.name}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span style={{ fontSize: "14px", color: "#e5e7eb", fontWeight: 500 }}>{skill.name}</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#22d3ee" }}>{skill.level}%</span>
+              </div>
+              <div style={{ height: "4px", background: "rgba(255,255,255,0.06)", borderRadius: "999px", overflow: "hidden" }}>
+                <div style={{
+                  height: "100%",
+                  width: `${skill.level}%`,
+                  background: "linear-gradient(90deg, #22d3ee, #3b82f6)",
+                  borderRadius: "999px",
+                  transition: "width 0.7s ease-out",
+                }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── PROJECTS ─────────────────────────────────────────────────────────────────
+function ProjectCard({ project }) {
+  const [hovered, setHovered] = useState(false);
+  const isAI = project.category === "AI";
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex", flexDirection: "column",
+        padding: "24px",
+        background: isAI
+          ? "linear-gradient(135deg, rgba(17,24,39,0.9), rgba(8,47,73,0.15))"
+          : "rgba(17,24,39,0.7)",
+        border: `1px solid ${hovered ? (isAI ? "rgba(6,182,212,0.35)" : "rgba(255,255,255,0.12)") : (isAI ? "rgba(6,182,212,0.15)" : "rgba(255,255,255,0.05)")}`,
+        borderRadius: "20px",
+        transition: "all 0.3s ease",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
+        boxShadow: hovered ? `0 20px 60px ${isAI ? "rgba(6,182,212,0.1)" : "rgba(0,0,0,0.3)"}` : "none",
+        cursor: "default",
+      }}
+    >
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+        <div style={{
+          width: "40px", height: "40px", borderRadius: "12px",
+          background: isAI ? "rgba(6,182,212,0.1)" : "rgba(59,130,246,0.1)",
+          color: isAI ? "#22d3ee" : "#60a5fa",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          {isAI ? <IconBrain /> : <IconCode />}
+        </div>
+        <span style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "10px", padding: "3px 10px", borderRadius: "999px",
+          color: project.status === "live" ? "#4ade80" : "#fbbf24",
+          background: project.status === "live" ? "rgba(20,83,45,0.4)" : "rgba(78,52,11,0.4)",
+        }}>
+          {project.status === "live" ? "● live" : "⚡ building"}
+        </span>
+      </div>
+
+      <h3 style={{
+        fontFamily: "'Syne', sans-serif", fontSize: "17px", fontWeight: 700,
+        color: hovered ? (isAI ? "#22d3ee" : "white") : "white",
+        marginBottom: "10px", transition: "color 0.3s",
+      }}>{project.title}</h3>
+
+      <p style={{ color: "#6b7280", fontSize: "13px", lineHeight: 1.7, marginBottom: "20px", flex: 1 }}>{project.description}</p>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
+        {project.tags.map(tag => (
+          <span key={tag} style={{
+            fontSize: "11px", padding: "4px 10px",
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.07)",
+            color: "#9ca3af", borderRadius: "6px",
+            fontFamily: "'JetBrains Mono', monospace",
+          }}>{tag}</span>
+        ))}
+      </div>
+
+      <div style={{ display: "flex", gap: "16px" }}>
+        <a href="#" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#6b7280", textDecoration: "none", fontFamily: "'JetBrains Mono', monospace", transition: "color 0.2s" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#fff"}
+          onMouseLeave={e => e.currentTarget.style.color = "#6b7280"}>
+          <IconGithub /><span>Code</span>
+        </a>
+        <a href="#" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#6b7280", textDecoration: "none", fontFamily: "'JetBrains Mono', monospace", transition: "color 0.2s" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#22d3ee"}
+          onMouseLeave={e => e.currentTarget.style.color = "#6b7280"}>
+          <IconLink /><span>Live</span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function ProjectsSection() {
+  const dispatch = useDispatch();
+  const { activeProjectFilter } = useSelector(s => s);
+  const { projects } = PORTFOLIO_DATA;
+  const filters = ["All", "AI", "Web"];
+  const filtered = activeProjectFilter === "All" ? projects : projects.filter(p => p.category === activeProjectFilter);
+
+  return (
+    <section id="projects" style={{ padding: "112px 24px", maxWidth: "1100px", margin: "0 auto" }}>
+      <SectionHeader label="Projects" title="Things I've Built" />
+
+      <div style={{ display: "flex", gap: "8px", marginTop: "48px", marginBottom: "40px" }}>
+        {filters.map(f => (
+          <button key={f} onClick={() => dispatch(actions.setFilter(f))} style={{
+            padding: "9px 20px", borderRadius: "10px", cursor: "pointer",
+            fontFamily: "'JetBrains Mono', monospace", fontSize: "12px",
+            border: "1px solid",
+            background: activeProjectFilter === f ? "#22d3ee" : "rgba(17,24,39,0.8)",
+            borderColor: activeProjectFilter === f ? "#22d3ee" : "rgba(255,255,255,0.08)",
+            color: activeProjectFilter === f ? "#030712" : "#9ca3af",
+            fontWeight: activeProjectFilter === f ? 600 : 400,
+            transition: "all 0.2s",
+          }}>
+            {f}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "20px" }}>
+        {filtered.map(project => <ProjectCard key={project.title} project={project} />)}
+      </div>
+    </section>
+  );
+}
+
+// ─── EXPERIENCE ───────────────────────────────────────────────────────────────
+function ExperienceSection() {
+  const { experience } = PORTFOLIO_DATA;
+
+  return (
+    <section id="experience" style={{ padding: "112px 24px", background: "rgba(17,24,39,0.3)" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <SectionHeader label="Experience" title="Where I've Worked" />
+
+        <div style={{ marginTop: "64px", position: "relative", paddingLeft: "48px" }}>
+          {/* Timeline */}
+          <div style={{ position: "absolute", left: "12px", top: 0, bottom: 0, width: "1px", background: "linear-gradient(to bottom, #22d3ee, rgba(59,130,246,0.3), transparent)" }} />
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "56px" }}>
+            {experience.map((exp, i) => (
+              <div key={exp.company} style={{ position: "relative" }}>
+                {/* Dot */}
+                <div style={{ position: "absolute", left: "-42px", top: "4px", width: "12px", height: "12px", borderRadius: "50%", background: "#22d3ee", border: "2px solid #030712", boxShadow: "0 0 12px rgba(34,211,238,0.4)" }} />
+
+                <div style={{ marginBottom: "16px" }}>
+                  <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: "22px", fontWeight: 700, color: "white", margin: "0 0 6px" }}>{exp.role}</h3>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                    <span style={{ color: "#22d3ee", fontSize: "14px", fontWeight: 600 }}>{exp.company}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "#6b7280", background: "rgba(255,255,255,0.05)", padding: "3px 10px", borderRadius: "6px" }}>{exp.period}</span>
+                    {exp.type === "consulting" && (
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "#a78bfa", background: "rgba(46,16,101,0.3)", border: "1px solid rgba(139,92,246,0.25)", padding: "3px 10px", borderRadius: "6px" }}>Consulting</span>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {exp.highlights.map((h, j) => (
+                    <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                      <span style={{ color: "#22d3ee", marginTop: "1px", flexShrink: 0, fontFamily: "'JetBrains Mono', monospace" }}>→</span>
+                      <span style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6 }}>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── CONTACT ──────────────────────────────────────────────────────────────────
+function ContactSection() {
+  const { personal } = PORTFOLIO_DATA;
+  return (
+    <section id="contact" style={{ padding: "112px 24px", maxWidth: "1100px", margin: "0 auto" }}>
+      <div style={{
+        position: "relative",
+        background: "linear-gradient(135deg, rgba(17,24,39,0.9), rgba(8,47,73,0.2), rgba(17,24,39,0.9))",
+        border: "1px solid rgba(6,182,212,0.15)",
+        borderRadius: "28px",
+        padding: "clamp(48px, 8vw, 96px)",
+        textAlign: "center",
+        overflow: "hidden",
+      }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top, rgba(6,182,212,0.07), transparent 60%)", pointerEvents: "none" }} />
+
+        <div style={{ position: "relative" }}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "#22d3ee", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "16px" }}>
+            Let's Build Together
+          </div>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(28px, 5vw, 48px)", color: "white", margin: "0 0 20px", lineHeight: 1.2 }}>
+            Have an AI project in mind?
+          </h2>
+          <p style={{ color: "#9ca3af", maxWidth: "500px", margin: "0 auto 48px", lineHeight: 1.8, fontSize: "16px" }}>
+            Whether you need to integrate LLMs into your product, build agentic workflows, or develop intelligent applications — let's talk.
+          </p>
+
+          <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+            <a href={`mailto:${personal.email}`} style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              padding: "14px 32px",
+              background: "linear-gradient(135deg, #22d3ee, #3b82f6)",
+              color: "white", fontWeight: 600, borderRadius: "12px",
+              border: "none", textDecoration: "none", fontSize: "14px",
+              fontFamily: "'Syne', sans-serif",
+              boxShadow: "0 8px 32px rgba(34,211,238,0.2)",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
+            onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
+              <IconMail /><span>Send a Message</span>
+            </a>
+            <a href={personal.linkedin} style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              padding: "14px 32px",
+              background: "rgba(255,255,255,0.06)",
+              color: "#d1d5db", fontWeight: 600, borderRadius: "12px",
+              border: "1px solid rgba(255,255,255,0.1)", textDecoration: "none", fontSize: "14px",
+              fontFamily: "'Syne', sans-serif",
+              transition: "background 0.2s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+            onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}>
+              <IconLinkedin /><span>Connect on LinkedIn</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── FOOTER ───────────────────────────────────────────────────────────────────
+function Footer() {
+  return (
+    <footer style={{ padding: "28px 24px", borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
+      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "12px", color: "#4b5563" }}>
+        {PORTFOLIO_DATA.personal.name} · {new Date().getFullYear()} · React + Redux + Tailwind
+      </p>
+    </footer>
+  );
+}
+
+// ─── RESPONSIVE ───────────────────────────────────────────────────────────────
+const style = document.createElement("style");
+style.textContent = `
+  @media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+    .hidden { display: none !important; }
+  }
+  @media (min-width: 769px) {
+    .md\\:flex { display: flex !important; }
+    .md\\:hidden { display: none !important; }
+  }
+`;
+document.head.appendChild(style);
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
+function AppContent() {
+  return (
+    <div style={{ minHeight: "100vh", background: "#030712", color: "white", fontFamily: "'Syne', sans-serif" }}>
+      <Navbar />
+      <HeroSection />
+      <AboutSection />
+      <SkillsSection />
+      <ProjectsSection />
+      <ExperienceSection />
+      <ContactSection />
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

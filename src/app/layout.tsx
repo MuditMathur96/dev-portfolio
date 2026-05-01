@@ -35,11 +35,7 @@ export default function RootLayout({
       
       `}>
 
-       <header className="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50 py-4 border-b border-gray-200 dark:border-gray-800">
-          
-
-        <Navbar />
-        </header>
+       
         <main>
         {children}
         </main>
