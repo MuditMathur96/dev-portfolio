@@ -66,6 +66,8 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { personal } = PORTFOLIO_DATA;
 
+ 
+
   const navLinks = [
     { id: "about", label: "About" },
     { id: "skills", label: "Skills" },
@@ -149,6 +151,7 @@ function Navbar() {
 // ─── Hero Section ─────────────────────────────────────────────────────────────
 function HeroSection() {
   const { personal, stats } = PORTFOLIO_DATA;
+   const [launchingEmail,setLaunchingEmail] = React.useState(false);
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -189,17 +192,30 @@ function HeroSection() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
           <button
-            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
             className="px-8 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-xl hover:opacity-90 transition-all shadow-lg shadow-cyan-500/25 text-sm"
           >
-            View Projects
+            Learn More
           </button>
-          <a
-            href={`mailto:${personal.email}`}
+          
+            { launchingEmail?
+            (<div
             className="px-8 py-3.5 border border-gray-700 text-gray-300 font-semibold rounded-xl hover:border-cyan-700 hover:text-cyan-400 transition-all text-sm"
-          >
-            Get In Touch
-          </a>
+            >
+              Loading
+            </div>)
+            :(<a
+              onClick={()=>{
+                setLaunchingEmail(true);
+                setTimeout(()=>setLaunchingEmail(false),2000);
+              }}
+              href={`mailto:${personal.email}`}
+              className="px-8 py-3.5 border border-gray-700 text-gray-300 font-semibold rounded-xl hover:border-cyan-700 hover:text-cyan-400 transition-all text-sm"
+            >
+              Get In Touch
+            </a>)
+            }
+          
         </div>
 
         {/* Stats */}

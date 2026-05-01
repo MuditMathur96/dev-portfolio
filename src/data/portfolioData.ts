@@ -31,9 +31,9 @@ export const PORTFOLIO_DATA = {
       { name: "Next.js", level: 82 },
     ],
     "Backend": [
-      { name: ".NET / C#", level: 88 },
+      { name: "Node.js", level: 88 },
       { name: "Python", level: 85 },
-      { name: "FastAPI", level: 80 },
+      { name: "Database", level: 80 },
       { name: "REST APIs", level: 90 },
       { name: "Docker", level: 85 },
     ],
